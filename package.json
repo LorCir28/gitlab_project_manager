@@ -9,6 +9,10 @@
   "author": "Lorenzo Cirillo",
   "license": "ISC",
   "dependencies": {
-    "@gitbeaker/node": "^35.6.0"
+    "@gitbeaker/node": "^35.6.0",
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.14.0"
   }
 }
