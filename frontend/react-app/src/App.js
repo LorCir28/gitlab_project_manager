@@ -21,33 +21,47 @@ function App() {
   return (
     <>
       <Navbar></Navbar>
-      <br />
-      <br />
-      <h1>Projects</h1>
-      <br />
-      {projects && projects.map((project) => (
-        <ProjectItem item={project} key={project.id}/>
-      ))}
-      <br />
-      <br />
-      <button onClick={() => setButtonPopup(true)}>open popup</button>
-      <Popup trigger={ButtonPopup} setTrigger={setButtonPopup}>
-        <input type={"text"} placeholder={"name of project"} id={"nameProject"}></input>
-        <br />
-        <br />
-        <input type={"text"} placeholder={"name of label"} id={"nameLabel"}></input>
-        <input type={"text"} placeholder={"colour of label"} id={"colourLabel"}></input>
-        <br />
-        <br />
-        <button type="button" className="btn btn-success" onClick={() => {
-          const nameProject = document.getElementById("nameProject").value;
-          const nameLabel = document.getElementById("nameLabel").value;
-          const colourProject = document.getElementById("colourLabel").value;
-          axios.post(`http://localhost:8000/new_project/${nameProject}/${nameLabel}/${colourProject}`);
-        }}>
-          create project
-        </button>
-      </Popup>
+      <div id="general-container">
+        <div id="projects-container">
+          <br />
+          <h1 id="h1_projects"><b>PROJECTS:</b></h1>
+          <br />
+          {projects && projects.map((project) => (
+            <ProjectItem item={project} key={project.id}/>
+          ))}
+          <br />
+          <br />
+          <button id="newproject-btn" onClick={() => setButtonPopup(true)}>New project</button>
+        </div>
+          <Popup trigger={ButtonPopup} setTrigger={setButtonPopup}>
+            <input type={"text"} placeholder={"name of project"} id={"nameProject"}></input>
+            {/* <br />
+            <br />
+            <button type="button" class="btn btn-secondary" onClick={() => {
+              var data = fs.readFileSync('./App.js').toString().split("\n");
+              data.splice(116, 0, titolorecensione+testorecensione);
+              var text = data.join("\n");
+              fs.writeFileSync("../frontend/public/esami/economiaAvanzata.html", text);
+            }}>Add label
+            </button> */}
+            <br />
+            <br />
+            <input type={"text"} placeholder={"name of label"} id={"nameLabel"}></input>
+            <input type={"text"} placeholder={"colour of label"} id={"colourLabel"}></input>
+            <br />
+            <br />
+            <button type="button" className="btn btn-success" onClick={() => {
+              const nameProject = document.getElementById("nameProject").value;
+              const nameLabel = document.getElementById("nameLabel").value;
+              const colourProject = document.getElementById("colourLabel").value;
+              axios.post(`http://localhost:8000/new_project/${nameProject}/${nameLabel}/${colourProject}`);
+              setButtonPopup(false);
+              window.location.reload();
+            }}>
+              create project
+            </button>
+          </Popup>
+      </div>
     </>
   );
 }

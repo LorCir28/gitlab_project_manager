@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,32 @@
   to {
     transform: rotate(360deg);
   }
+} */
+
+#general-container {
+  background-color:grey;
+  padding: 50px;
+  padding-left: 200px;
+  padding-right: 200px;
 }
+
+#newproject-btn {
+  color: black;
+  background-color: white;
+  /* float: right; */
+  margin-bottom: 30px;
+  margin-left: 850px;
+}
+
+#h1_projects {
+  font-size: 60px;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+#projects-container {
+  margin: 50px;
+  border-style: solid;
+}
+
+

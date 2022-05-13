@@ -1,6 +1,10 @@
+import "./projectItem.css"
+
 const ProjectItem = ({item}) => {
     return(
-        <h2>{item.name}</h2>
+        <div id="div">
+            <h2>{item.name}</h2>
+        </div>
     )
 }
 
