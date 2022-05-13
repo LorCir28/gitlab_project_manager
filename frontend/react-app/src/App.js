@@ -9,29 +9,13 @@ import ProjectItem from "./components/projectItem";
 
 function App() {
   const [ButtonPopup, setButtonPopup] = useState(false);
-  // let Projects = axios.get("http://localhost:8000/projects");
-  // const getProjects = async() => {
-  //   let Projects = await axios.get("http://localhost:8000/projects");
-  //   return Projects;
-  // }
-  // const projects = () => {
-  //   axios.get("http://localhost:8000/projects")
-  //   .then(res => {return res.data})
-  // }
 
   const [projects, setProjects] = useState([]);
   useEffect(() => {
-    // async function fetchData() {
-    //   const dati = await axios.get("http://localhost:8000/projects");
-    //   setProjects(dati.data);
-    //   return dati;
-    // }
-    // fetchData();
     fetch("http://localhost:8000/projects")
     .then(res => {return res.json()})
     .then(data => setProjects(data))
   }, [])
-
 
 
   return (
@@ -44,20 +28,26 @@ function App() {
       {projects && projects.map((project) => (
         <ProjectItem item={project} key={project.id}/>
       ))}
-        {/* {getProjects()
-        .then(project => <h1>{project}</h1>)} */}
-      {/* <button type="button" class="btn btn-secondary" onClick={() => setButtonPopup(true)}>Create new project</button>
+      <br />
+      <br />
+      <button onClick={() => setButtonPopup(true)}>open popup</button>
       <Popup trigger={ButtonPopup} setTrigger={setButtonPopup}>
         <input type={"text"} placeholder={"name of project"} id={"nameProject"}></input>
         <br />
         <br />
-        <button type="button" class="btn btn-success" onClick={() => {
+        <input type={"text"} placeholder={"name of label"} id={"nameLabel"}></input>
+        <input type={"text"} placeholder={"colour of label"} id={"colourLabel"}></input>
+        <br />
+        <br />
+        <button type="button" className="btn btn-success" onClick={() => {
           const nameProject = document.getElementById("nameProject").value;
-          axios.post(`http://localhost:8000/new_project/${nameProject}`);
+          const nameLabel = document.getElementById("nameLabel").value;
+          const colourProject = document.getElementById("colourLabel").value;
+          axios.post(`http://localhost:8000/new_project/${nameProject}/${nameLabel}/${colourProject}`);
         }}>
           create project
         </button>
-      </Popup> */}
+      </Popup>
     </>
   );
 }

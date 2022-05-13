@@ -68,11 +68,11 @@ app.use(express.json());
 
 app.use(cors());
 
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 
 
@@ -127,6 +127,32 @@ app.get("/projects", async(req, res) => {
 
 
 
+// return project with name 'nameProject' and label with name 'nameLabel' and colour 'colourLabel'
+
+app.post("/", (req, res) => {
+  res.send("test");
+})
+
+app.post("/new_project/:nameProject/:nameLabel/:colourLabel", async(req, res) => {
+  const {nameProject} = req.params;
+  const {nameLabel} = req.params;
+  const {colourLabel} = req.params;
+
+  const newProject = await createNewProject(nameProject);
+  const requiredBoard = await createRequiredBoard(newProject.id);
+  const label = await createLabel(newProject.id, nameLabel, colourLabel);
+  await createBoardList(newProject.id, requiredBoard.id, label.id);
+
+
+  res.send("created new project and required board in it");
+})
+
+
+
+
+
+
 app.listen(8000, () => {
   console.log("server is listening on port 8000...");
 });
+
