@@ -129,14 +129,14 @@ app.get("/projects", async(req, res) => {
 
 // return project with name 'nameProject' and label with name 'nameLabel' and colour 'colourLabel'
 
-app.post("/", (req, res) => {
-  res.send("test");
-})
+app.post("/new_project", async(req, res) => {
+  // const {nameProject} = req.params;
+  // const {nameLabel} = req.params;
+  // const {colourLabel} = req.params;
 
-app.post("/new_project/:nameProject/:nameLabel/:colourLabel", async(req, res) => {
-  const {nameProject} = req.params;
-  const {nameLabel} = req.params;
-  const {colourLabel} = req.params;
+  const {nameProject} = req.body;
+  const {nameLabel} = req.body;
+  const {colourLabel} = req.body;
 
   const newProject = await createNewProject(nameProject);
   const requiredBoard = await createRequiredBoard(newProject.id);
@@ -146,6 +146,17 @@ app.post("/new_project/:nameProject/:nameLabel/:colourLabel", async(req, res) =>
 
   res.send("created new project and required board in it");
 })
+
+// const fs = require("fs");
+
+// app.post("/add-label", (req, res)  => {
+//   var data = fs.readFileSync('../frontend/react-app/src/App.js').toString().split("\n");
+//   data.splice(47, 0, "<input type={'text'} placeholder={'name of label'} id={'nameLabel'}></input><input type={'text'} placeholder={'colour of label'} id={'colourLabel'}></input>");
+//   var text = data.join("\n");
+//   fs.writeFileSync("../frontend/react-app/src/App.js", text);
+
+//   res.send("label created")
+// })
 
 
 

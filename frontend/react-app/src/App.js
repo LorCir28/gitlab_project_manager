@@ -38,10 +38,7 @@ function App() {
             {/* <br />
             <br />
             <button type="button" class="btn btn-secondary" onClick={() => {
-              var data = fs.readFileSync('./App.js').toString().split("\n");
-              data.splice(116, 0, titolorecensione+testorecensione);
-              var text = data.join("\n");
-              fs.writeFileSync("../frontend/public/esami/economiaAvanzata.html", text);
+              axios.post(`http://localhost:8000/add-label`);
             }}>Add label
             </button> */}
             <br />
@@ -53,8 +50,12 @@ function App() {
             <button type="button" className="btn btn-success" onClick={() => {
               const nameProject = document.getElementById("nameProject").value;
               const nameLabel = document.getElementById("nameLabel").value;
-              const colourProject = document.getElementById("colourLabel").value;
-              axios.post(`http://localhost:8000/new_project/${nameProject}/${nameLabel}/${colourProject}`);
+              const colourLabel = document.getElementById("colourLabel").value;
+              axios.post(`http://localhost:8000/new_project`, {
+                nameProject: nameProject,
+                nameLabel: nameLabel,
+                colourLabel: colourLabel
+               });
               setButtonPopup(false);
               window.location.reload();
             }}>
