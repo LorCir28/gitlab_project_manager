@@ -1,3 +1,5 @@
+// modal (popup)
+
 import React from "react";
 import './App.css';
 import "bootstrap/dist/css/bootstrap.css"
@@ -31,8 +33,13 @@ function App() {
           ))}
           <br />
           <br />
-          <button id="newproject-btn" onClick={() => setButtonPopup(true)}>New project</button>
+          <button id="newproject-btn" onClick={() => {
+            setButtonPopup(true);
+            const background = document.getElementById("general-container");
+            background.style.filter = "blur(8px)";
+          }}>New project</button>
         </div>
+      </div>
           <Popup trigger={ButtonPopup} setTrigger={setButtonPopup}>
             <input type={"text"} placeholder={"name of project"} id={"nameProject"}></input>
             {/* <br />
@@ -62,7 +69,6 @@ function App() {
               create project
             </button>
           </Popup>
-      </div>
     </>
   );
 }
