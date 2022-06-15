@@ -129,21 +129,47 @@ app.get("/projects", async(req, res) => {
 
 // return project with name 'nameProject' and label with name 'nameLabel' and colour 'colourLabel'
 
+// app.post("/new_project", async(req, res) => {
+//   // const {nameProject} = req.params;
+//   // const {nameLabel} = req.params;
+//   // const {colourLabel} = req.params;
+
+//   const {nameProject} = req.body;
+//   const {nameLabel} = req.body;
+//   const {colourLabel} = req.body;
+
+//   const newProject = await createNewProject(nameProject);
+//   const requiredBoard = await createRequiredBoard(newProject.id);
+//   const label = await createLabel(newProject.id, nameLabel, colourLabel);
+//   await createBoardList(newProject.id, requiredBoard.id, label.id);
+
+  
+//   res.send("created new project and required board in it");
+// })
+
 app.post("/new_project", async(req, res) => {
   // const {nameProject} = req.params;
   // const {nameLabel} = req.params;
   // const {colourLabel} = req.params;
 
   const {nameProject} = req.body;
-  const {nameLabel} = req.body;
-  const {colourLabel} = req.body;
+  // const {nameLabel} = req.body;
+  // const {colourLabel} = req.body;
+  const {inputLabels} = req.body;
+  // console.log(inputLabels);
 
   const newProject = await createNewProject(nameProject);
   const requiredBoard = await createRequiredBoard(newProject.id);
-  const label = await createLabel(newProject.id, nameLabel, colourLabel);
+
+  inputLabels.map(async (inputLabel) => {
+    // console.log(inputLabel);
+  let label = await createLabel(newProject.id, inputLabel.nameLabel, inputLabel.colourLabel);
   await createBoardList(newProject.id, requiredBoard.id, label.id);
+  });
+  // const label = await createLabel(newProject.id, nameLabel, colourLabel);
+  // await createBoardList(newProject.id, requiredBoard.id, label.id);
 
-
+  
   res.send("created new project and required board in it");
 })
 

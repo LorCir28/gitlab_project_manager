@@ -1,5 +1,3 @@
-// modal (popup)
-
 import React from "react";
 import './App.css';
 import "bootstrap/dist/css/bootstrap.css"
@@ -8,6 +6,7 @@ import Popup from "./components/popup"
 import {useState, useEffect} from "react"
 import axios from "axios"
 import ProjectItem from "./components/projectItem";
+import InputLabel from "./components/InputLabel";
 
 function App() {
   const [ButtonPopup, setButtonPopup] = useState(false);
@@ -19,6 +18,7 @@ function App() {
     .then(data => setProjects(data))
   }, [])
 
+  const [inputLabels, setInputLabel] = useState([]);
 
   return (
     <>
@@ -34,7 +34,7 @@ function App() {
           <br />
           <br />
           <button id="newproject-btn" onClick={() => {
-            setButtonPopup(true);
+           setButtonPopup(true);
             const background = document.getElementById("general-container");
             background.style.filter = "blur(8px)";
           }}>New project</button>
@@ -42,19 +42,35 @@ function App() {
       </div>
           <Popup trigger={ButtonPopup} setTrigger={setButtonPopup}>
             <input type={"text"} placeholder={"name of project"} id={"nameProject"}></input>
-            {/* <br />
-            <br />
-            <button type="button" class="btn btn-secondary" onClick={() => {
-              axios.post(`http://localhost:8000/add-label`);
-            }}>Add label
-            </button> */}
+
             <br />
             <br />
-            <input type={"text"} placeholder={"name of label"} id={"nameLabel"}></input>
-            <input type={"text"} placeholder={"colour of label"} id={"colourLabel"}></input>
+
+            { inputLabels.map((inputLabel) => (
+              <InputLabel id={inputLabels.indexOf(inputLabel)}/>
+            )) }
+
             <br />
             <br />
-            <button type="button" className="btn btn-success" onClick={() => {
+
+            <button  type="button" className="btn btn-primary" onClick={() => {
+              setInputLabel([...inputLabels, { nameLabel: '', colourLabel: ''}]);
+            }}>
+              add label
+            </button>
+
+            <button  type="button" className="btn btn-secondary" onClick={() => {
+              const values = [...inputLabels];
+              values.pop();
+              setInputLabel(values);
+            }}>
+              remove label
+            </button>
+
+            <br />
+            <br />
+
+            {/* <button type="button" className="btn btn-success" onClick={() => {
               const nameProject = document.getElementById("nameProject").value;
               const nameLabel = document.getElementById("nameLabel").value;
               const colourLabel = document.getElementById("colourLabel").value;
@@ -67,7 +83,30 @@ function App() {
               window.location.reload();
             }}>
               create project
+            </button> */}
+
+            <button type="button" className="btn btn-success" onClick={() => {
+
+              const nameProject = document.getElementById("nameProject").value;
+              // const nameLabel = document.getElementById("nameLabel").value;
+              // const colourLabel = document.getElementById("colourLabel").value;
+              const labels = inputLabels;
+              for (let i = 0; i < labels.length; i++) {
+                labels[i].nameLabel = document.getElementById(i).value;
+                labels[i].colourLabel = document.getElementById(i+100).value;
+              }
+              axios.post(`http://localhost:8000/new_project`, {
+                nameProject: nameProject,
+                inputLabels: labels
+                // nameLabel: nameLabel,
+                // colourLabel: colourLabel
+               });
+              setButtonPopup(false);
+              window.location.reload();
+            }}>
+              create project
             </button>
+
           </Popup>
     </>
   );
