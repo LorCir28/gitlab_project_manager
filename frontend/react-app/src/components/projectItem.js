@@ -3,7 +3,7 @@ import "./projectItem.css"
 const ProjectItem = ({item}) => {
     return(
         <div id="div">
-            <h2>{item.name}</h2>
+            <h5>{item.name}</h5>
         </div>
     )
 }

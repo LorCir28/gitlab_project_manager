@@ -3,5 +3,17 @@
     margin-top: 10%;
     padding-left: 40%;
     padding-right: 40%;
-    size: 500px;
+}
+
+#btn-listprojects {
+    margin: 5%;
+}
+
+#btn-createproject {
+    margin-bottom: 5%;
+}
+
+#cardtitle {
+    position: relative;
+    right: 5%;
 }

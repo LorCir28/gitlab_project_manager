@@ -1,19 +1,12 @@
 #external-container {
-  background-color:grey;
-  padding: 104px;
-}
-
-#newproject-btn {
-  color: black;
-  background-color: white;
-  margin-bottom: 30px;
-  margin-left: 850px;
+  /* background-color:grey; */
+  background-image: url(./img/background.jpg);
+  background-size: cover;
+  padding: 84px;
 }
 
 #h1_projects {
-  font-size: 60px;
-  padding-left: 50px;
-  padding-right: 50px;
+  padding-left: 5%;
 }
 
 #projects-container {
@@ -23,6 +16,19 @@
 
 #page_title {
   text-align: center;
+}
+
+#btn-addlabel {
+  margin-right: 5%;
+}
+
+#project_to_delete {
+  margin-left: 2%;
+}
+
+#btn-deleteprojectpopup {
+  position:relative;
+  left: 420px;
 }
 
 

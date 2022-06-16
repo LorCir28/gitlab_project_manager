@@ -38,7 +38,7 @@ function App() {
 
       {/* list project popup */}
       <Popup trigger={ButtonPopupListProjects} setTrigger={setButtonPopupListProjects}>
-        <h1 id="h1_projects"><b>PROJECTS:</b></h1>
+        <h2 id="h1_projects"><b>PROJECTS:</b></h2>
         {projects && projects.map((project) => (
           <ProjectItem item={project} key={project.id}/>
         ))}
@@ -48,11 +48,14 @@ function App() {
       <Popup trigger={ButtonPopupCreateProject} setTrigger={setButtonPopupCreateProject}>
               <input type={"text"} placeholder={"name of project"} id={"nameProject"} required></input>
 
+              <br />
+              <br />
+
               { inputLabels.map((inputLabel) => (
                 <InputLabel id={inputLabels.indexOf(inputLabel)}/>
               )) }
 
-              <button type="button" className="btn btn-primary" onClick={() => {
+              <button type="button" className="btn btn-primary" id="btn-addlabel" onClick={() => {
                 setInputLabel([...inputLabels, { nameLabel: '', colourLabel: ''}]);
               }}>
                 add label
@@ -65,6 +68,9 @@ function App() {
               }}>
                 remove label
               </button>
+
+              <br />
+              <br />
 
               <button type="button" className="btn btn-success" onClick={() => {
 
@@ -112,7 +118,10 @@ function App() {
             ))}
             </select>
 
-            <button type="button" className="btn btn-danger" onClick={() => {
+            <br />
+            <br />
+
+            <button type="button" className="btn btn-danger" id="btn-deleteprojectpopup" onClick={() => {
               const nameProject = document.getElementById("project_to_delete").value;
               axios.post(`http://localhost:8000/delete_project`, {
                 nameProject: nameProject,

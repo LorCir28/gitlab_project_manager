@@ -1,9 +1,10 @@
+import "./inputLabel.css"
+
 const InputLabel = (props) => {
     return(
-        <div>
-            <input type={"text"} placeholder={"name of label"} id={props.id}></input>
-            {/* <input type={"text"} placeholder={"colour of label"} id={props.id+100}></input> */}
-            colour of label<select id={props.id+100}>
+        <div id="inputlabel-container">
+            <input type={"text"} placeholder={"name of label"} id={props.id} className="labelname"></input>
+            colour of label<select id={props.id+100} className="labelcolour">
             <option>white</option>
             <option>red</option>
             <option>yellow</option>
