@@ -86,6 +86,8 @@ const createBoardList = require("./board_lists/create");
 
 const getUsers = require("./users/get");
 
+const getGroups = require("./groups/get");
+
 
 // manage form to create a new project with input name and labels
 
@@ -138,6 +140,36 @@ app.post("/new_project", async(req, res) => {
 
   
   res.send("created new project and required board in it");
+})
+
+
+// return groups list
+
+app.get("/groups", async(req, res) => {
+  let groups = await getGroups();
+
+  console.log(groups);
+  
+  res.send(groups.map(group => ({
+    name: group.name,
+    id: group.id
+  })
+));
+
+})
+
+
+// create group
+
+app.post("/new_group", async(req, res) => {
+  await api.Groups.create("groupFromNode", "");
+})
+
+
+// delete group
+
+app.post("/delete_group", async(req, res) => {
+  await api.Groups.remove(id);
 })
 
 

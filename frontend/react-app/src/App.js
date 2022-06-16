@@ -14,11 +14,22 @@ function App() {
   const [ButtonPopupCreateProject, setButtonPopupCreateProject] = useState(false);
   const [ButtonPopupDeleteProject, setButtonPopupDeleteProject] = useState(false);
 
+  const [ButtonPopupListGroups, setButtonPopupListGroups] = useState(false);
+  const [ButtonPopupCreateGroup, setButtonPopupCreateGroup] = useState(false);
+  const [ButtonPopupDeleteGroup, setButtonPopupDeleteGroup] = useState(false);
+
   const [projects, setProjects] = useState([]);
   useEffect(() => {
     fetch("http://localhost:8000/projects")
     .then(res => {return res.json()})
     .then(data => setProjects(data))
+  }, [])
+
+  const [groups, setGroups] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:8000/groups")
+    .then(res => {return res.json()})
+    .then(data => setGroups(data))
   }, [])
 
   const [inputLabels, setInputLabel] = useState([]);
@@ -31,8 +42,10 @@ function App() {
       <div className="container" id="general-container">
           <h1 id="page_title">Welcome to my Gitlab project Manager. Here you can manage your gitlab projects with a simple interface</h1>
         <div className="row">
-          <Card setButtonPopupListProjects={setButtonPopupListProjects} setButtonPopupCreateProject={setButtonPopupCreateProject}
-            setButtonPopupDeleteProject={setButtonPopupDeleteProject} />
+          <Card setButtonPopupList={setButtonPopupListProjects} setButtonPopupCreate={setButtonPopupCreateProject}
+            setButtonPopupDelete={setButtonPopupDeleteProject} item={"projects"} />
+          <Card setButtonPopupList={setButtonPopupListGroups} setButtonPopupCreate={setButtonPopupCreateGroup}
+            setButtonPopupDelete={setButtonPopupDeleteGroup} item={"groups"} />
         </div>
       </div>
 
@@ -127,7 +140,72 @@ function App() {
                 nameProject: nameProject,
               });
 
-              setButtonPopupCreateProject(false);
+              setButtonPopupDeleteProject(false);
+              window.location.reload();
+            }}>
+              delete project
+            </button>
+
+          </Popup>
+
+
+          {/* list group popup */}
+          <Popup trigger={ButtonPopupListGroups} setTrigger={setButtonPopupListGroups}>
+            <h2 id="h1_projects"><b>GROUPS:</b></h2>
+            {groups && groups.map((group) => (
+              <ProjectItem item={group} key={group.id}/>
+            ))}
+          </Popup>
+
+
+          {/* create new group popup */}
+          <Popup trigger={ButtonPopupCreateGroup} setTrigger={setButtonPopupCreateGroup}>
+              <input type={"text"} placeholder={"name of group"} id={"nameGroup"} required></input>
+
+              <br />
+              <br />
+
+              <button type="button" className="btn btn-success" onClick={() => {
+
+                const nameGroup = document.getElementById("nameGroup").value;
+
+                // control: group name can't be empty
+                if (nameGroup === "") {
+                  alert("group name can't be empty");
+                  return false;
+                }
+
+                axios.post(`http://localhost:8000/new_group`, {
+                  nameGroup: nameGroup,
+                });
+
+                setButtonPopupCreateGroup(false);
+                window.location.reload();
+              }}>
+                create group
+              </button>
+
+          </Popup>
+
+          {/* delete group popup */}
+          <Popup trigger={ButtonPopupDeleteGroup} setTrigger={setButtonPopupDeleteGroup}>
+
+            group name<select id="group_to_delete">
+            {groups && groups.map((group) => (
+              <option><ProjectItem item={group} key={group.id}/></option>
+            ))}
+            </select>
+
+            <br />
+            <br />
+
+            <button type="button" className="btn btn-danger" id="btn-deletegrouppopup" onClick={() => {
+              const nameGroup = document.getElementById("group_to_delete").value;
+              axios.post(`http://localhost:8000/delete_group`, {
+                nameGroup: nameGroup,
+              });
+
+              setButtonPopupDeleteGroup(false);
               window.location.reload();
             }}>
               delete project
