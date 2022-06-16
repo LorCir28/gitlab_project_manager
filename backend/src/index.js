@@ -87,31 +87,26 @@ const createBoardList = require("./board_lists/create");
 
 // automate the creation of the required board at the creation of a new project
 
-app.post("/new_project/:projectName", async(req, res) => {
-  const {projectName} = req.params;
+// app.post("/new_project/:projectName", async(req, res) => {
+//   const {projectName} = req.params;
 
-  const newProject = await createNewProject(projectName);
-  const requiredBoard = await createRequiredBoard(newProject.id);
+//   const newProject = await createNewProject(projectName);
+//   const requiredBoard = await createRequiredBoard(newProject.id);
 
-  const labels = req.body;
+//   const labels = req.body;
 
-  const keys = Object.keys(labels);
-  for (key of keys) {
-    const lab = await createLabel(newProject.id, labels[key].name, labels[key].color);
-    await createBoardList(newProject.id, requiredBoard.id, lab.id);
-  }
+//   const keys = Object.keys(labels);
+//   for (key of keys) {
+//     const lab = await createLabel(newProject.id, labels[key].name, labels[key].color);
+//     await createBoardList(newProject.id, requiredBoard.id, lab.id);
+//   }
 
 
-  res.send("created new project and required board in it");
-})
+//   res.send("created new project and required board in it");
+// })
 
 
 // manage form to create a new project with input name and labels
-
-// app.post("/project-creation", (req, res) => {
-//   console.log(req.body);
-// })
-
 
 // return projects list
 
@@ -125,64 +120,59 @@ app.get("/projects", async(req, res) => {
   ));
 })
 
+// const getProjects = async () => {
+//   let user = await api.Users.current();
+//   let projects = await api.Users.projects(user.id);
 
+//   return projects;
+// }
 
-// return project with name 'nameProject' and label with name 'nameLabel' and colour 'colourLabel'
-
-// app.post("/new_project", async(req, res) => {
-//   // const {nameProject} = req.params;
-//   // const {nameLabel} = req.params;
-//   // const {colourLabel} = req.params;
-
-//   const {nameProject} = req.body;
-//   const {nameLabel} = req.body;
-//   const {colourLabel} = req.body;
-
-//   const newProject = await createNewProject(nameProject);
-//   const requiredBoard = await createRequiredBoard(newProject.id);
-//   const label = await createLabel(newProject.id, nameLabel, colourLabel);
-//   await createBoardList(newProject.id, requiredBoard.id, label.id);
-
-  
-//   res.send("created new project and required board in it");
+// getProjects().then(projects => {
+//   console.log("Projects: ", projects.map(project => project.name));
 // })
 
+
+
+// app.get("/project_members", async(req, res) => {
+
+//   const getProjectMembers = async () => {
+//     let groups = await api.Groups.all();
+//     let projects = await api.Groups.projects(groups[0].id);
+//     let members = await api.ProjectMembers.all(projects[0].id);
+  
+//     return members;
+//   }
+  
+//   getProjectMembers().then(members => {
+//     console.log("project Members: ", members.map(member => member.name));
+//   })
+
+// })
+
+
+// app.post("/delete_project", async(req, res) => {
+//   //   await api.Projects.remove(35481388);   // id project: 35481388
+
+// })
+
+
 app.post("/new_project", async(req, res) => {
-  // const {nameProject} = req.params;
-  // const {nameLabel} = req.params;
-  // const {colourLabel} = req.params;
 
   const {nameProject} = req.body;
-  // const {nameLabel} = req.body;
-  // const {colourLabel} = req.body;
   const {inputLabels} = req.body;
-  // console.log(inputLabels);
 
   const newProject = await createNewProject(nameProject);
   const requiredBoard = await createRequiredBoard(newProject.id);
 
   inputLabels.map(async (inputLabel) => {
-    // console.log(inputLabel);
   let label = await createLabel(newProject.id, inputLabel.nameLabel, inputLabel.colourLabel);
   await createBoardList(newProject.id, requiredBoard.id, label.id);
   });
-  // const label = await createLabel(newProject.id, nameLabel, colourLabel);
-  // await createBoardList(newProject.id, requiredBoard.id, label.id);
 
   
   res.send("created new project and required board in it");
 })
 
-// const fs = require("fs");
-
-// app.post("/add-label", (req, res)  => {
-//   var data = fs.readFileSync('../frontend/react-app/src/App.js').toString().split("\n");
-//   data.splice(47, 0, "<input type={'text'} placeholder={'name of label'} id={'nameLabel'}></input><input type={'text'} placeholder={'colour of label'} id={'colourLabel'}></input>");
-//   var text = data.join("\n");
-//   fs.writeFileSync("../frontend/react-app/src/App.js", text);
-
-//   res.send("label created")
-// })
 
 
 
