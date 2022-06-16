@@ -1,14 +1,11 @@
-/* #general-container {
-  background-color:grey; */
-  /* padding: 50px;
-  padding-left: 200px;
-  padding-right: 200px;
-} */
+#external-container {
+  background-color:grey;
+  padding: 104px;
+}
 
 #newproject-btn {
   color: black;
   background-color: white;
-  /* float: right; */
   margin-bottom: 30px;
   margin-left: 850px;
 }
@@ -22,6 +19,10 @@
 #projects-container {
   margin: 50px;
   border-style: solid;
+}
+
+#page_title {
+  text-align: center;
 }
 
 

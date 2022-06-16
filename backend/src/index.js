@@ -84,29 +84,11 @@ const createLabel = require("./labels/create");
 
 const createBoardList = require("./board_lists/create");
 
-
-// automate the creation of the required board at the creation of a new project
-
-// app.post("/new_project/:projectName", async(req, res) => {
-//   const {projectName} = req.params;
-
-//   const newProject = await createNewProject(projectName);
-//   const requiredBoard = await createRequiredBoard(newProject.id);
-
-//   const labels = req.body;
-
-//   const keys = Object.keys(labels);
-//   for (key of keys) {
-//     const lab = await createLabel(newProject.id, labels[key].name, labels[key].color);
-//     await createBoardList(newProject.id, requiredBoard.id, lab.id);
-//   }
-
-
-//   res.send("created new project and required board in it");
-// })
+const getUsers = require("./users/get");
 
 
 // manage form to create a new project with input name and labels
+
 
 // return projects list
 
@@ -120,41 +102,26 @@ app.get("/projects", async(req, res) => {
   ));
 })
 
-// const getProjects = async () => {
-//   let user = await api.Users.current();
-//   let projects = await api.Users.projects(user.id);
 
-//   return projects;
-// }
+// delete project
 
-// getProjects().then(projects => {
-//   console.log("Projects: ", projects.map(project => project.name));
-// })
+app.post("/delete_project", async(req, res) => {
+  const {nameProject} = req.body;
 
+  const user = await getUsers();
 
+  let projects = await api.Users.projects(user.id);
+  for (let i = 0; i < projects.length; i++) {
+    if (projects[i].name === nameProject) {
+      api.Projects.remove(projects[i].id);
+      res.send("project deleted");
+      break;
+    }
+  }
 
-// app.get("/project_members", async(req, res) => {
+})
 
-//   const getProjectMembers = async () => {
-//     let groups = await api.Groups.all();
-//     let projects = await api.Groups.projects(groups[0].id);
-//     let members = await api.ProjectMembers.all(projects[0].id);
-  
-//     return members;
-//   }
-  
-//   getProjectMembers().then(members => {
-//     console.log("project Members: ", members.map(member => member.name));
-//   })
-
-// })
-
-
-// app.post("/delete_project", async(req, res) => {
-//   //   await api.Projects.remove(35481388);   // id project: 35481388
-
-// })
-
+// create new project
 
 app.post("/new_project", async(req, res) => {
 
