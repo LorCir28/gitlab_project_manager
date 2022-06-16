@@ -22,7 +22,11 @@ function App() {
 
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar />
+
+      {/* <div className="container">
+
+      </div> */}
       <div id="general-container">
         <div id="projects-container">
           <br />
@@ -41,71 +45,68 @@ function App() {
         </div>
       </div>
           <Popup trigger={ButtonPopup} setTrigger={setButtonPopup}>
-            <input type={"text"} placeholder={"name of project"} id={"nameProject"}></input>
+              <input type={"text"} placeholder={"name of project"} id={"nameProject"} required></input>
 
-            <br />
-            <br />
+              <br />
+              <br />
 
-            { inputLabels.map((inputLabel) => (
-              <InputLabel id={inputLabels.indexOf(inputLabel)}/>
-            )) }
+              { inputLabels.map((inputLabel) => (
+                <InputLabel id={inputLabels.indexOf(inputLabel)}/>
+              )) }
 
-            <br />
-            <br />
+              <br />
+              <br />
 
-            <button  type="button" className="btn btn-primary" onClick={() => {
-              setInputLabel([...inputLabels, { nameLabel: '', colourLabel: ''}]);
-            }}>
-              add label
-            </button>
+              <button type="button" className="btn btn-primary" onClick={() => {
+                setInputLabel([...inputLabels, { nameLabel: '', colourLabel: ''}]);
+              }}>
+                add label
+              </button>
 
-            <button  type="button" className="btn btn-secondary" onClick={() => {
-              const values = [...inputLabels];
-              values.pop();
-              setInputLabel(values);
-            }}>
-              remove label
-            </button>
+              <button type="button" className="btn btn-secondary" onClick={() => {
+                const values = [...inputLabels];
+                values.pop();
+                setInputLabel(values);
+              }}>
+                remove label
+              </button>
+              
+              <br />
+              <br />
 
-            <br />
-            <br />
+              <button type="button" className="btn btn-success" onClick={() => {
 
-            {/* <button type="button" className="btn btn-success" onClick={() => {
-              const nameProject = document.getElementById("nameProject").value;
-              const nameLabel = document.getElementById("nameLabel").value;
-              const colourLabel = document.getElementById("colourLabel").value;
-              axios.post(`http://localhost:8000/new_project`, {
-                nameProject: nameProject,
-                nameLabel: nameLabel,
-                colourLabel: colourLabel
-               });
-              setButtonPopup(false);
-              window.location.reload();
-            }}>
-              create project
-            </button> */}
+                const nameProject = document.getElementById("nameProject").value;
 
-            <button type="button" className="btn btn-success" onClick={() => {
+                // control: project name can't be empty
+                if (nameProject === "") {
+                  alert("project name can't be empty");
+                  return false;
+                }
 
-              const nameProject = document.getElementById("nameProject").value;
-              // const nameLabel = document.getElementById("nameLabel").value;
-              // const colourLabel = document.getElementById("colourLabel").value;
-              const labels = inputLabels;
-              for (let i = 0; i < labels.length; i++) {
-                labels[i].nameLabel = document.getElementById(i).value;
-                labels[i].colourLabel = document.getElementById(i+100).value;
-              }
-              axios.post(`http://localhost:8000/new_project`, {
-                nameProject: nameProject,
-                inputLabels: labels
-                // nameLabel: nameLabel,
-                // colourLabel: colourLabel
-               });
-              setButtonPopup(false);
-              window.location.reload();
-            }}>
-              create project
-            </button>
+                // control: name label can't be empty
+                for (let i = 0; i < inputLabels.length; i++) {
+                  if (document.getElementById(i).value === "") {
+                    alert("name label can't be empty");
+                    return false;
+                  }
+                }
+
+                const labels = inputLabels;
+                for (let i = 0; i < labels.length; i++) {
+                  labels[i].nameLabel = document.getElementById(i).value;
+                  labels[i].colourLabel = document.getElementById(i+100).value;
+                }
+                axios.post(`http://localhost:8000/new_project`, {
+                  nameProject: nameProject,
+                  inputLabels: labels
+                });
+
+                setButtonPopup(false);
+                window.location.reload();
+              }}>
+                create project
+              </button>
 
           </Popup>
     </>
