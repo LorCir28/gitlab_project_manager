@@ -197,12 +197,35 @@ function App() {
           <Popup trigger={ButtonPopupCreateLabel} setTrigger={setButtonPopupCreateLabel}>
               <input type={"text"} placeholder={"name of label"} id={"nameLabel"} required></input>
 
+              colour of label<select id="colour-label-popup">
+                <option>white</option>
+                <option>red</option>
+                <option>yellow</option>
+                <option>grey</option>
+                <option>black</option>
+                <option>green</option>
+                <option>violet</option>
+                <option>orange</option>
+                <option>brown</option>
+              </select>
+
               <br />
               <br />
 
-              <button type="button" className="btn btn-success" onClick={() => {
+              project name<select id="project__create_label">
+              {projects && projects.map((project) => (
+                <option><ProjectItem item={project} key={project.id}/></option>
+              ))}
+              </select>
+
+              <br />
+              <br />
+
+              <button type="button" className="btn btn-success" id = "btn-createlabelpopup" onClick={() => {
 
                 const nameLabel = document.getElementById("nameLabel").value;
+                const nameProject = document.getElementById("project__create_label").value;
+                const colourLabel = document.getElementById("colour-label-popup").value;
 
                 // control: label name can't be empty
                 if (nameLabel === "") {
@@ -212,6 +235,8 @@ function App() {
 
                 axios.post(`http://localhost:8000/new_label`, {
                   nameLabel: nameLabel,
+                  nameProject: nameProject,
+                  colourLabel: colourLabel
                 });
 
                 setButtonPopupCreateLabel(false);

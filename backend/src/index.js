@@ -86,6 +86,8 @@ const createBoardList = require("./board_lists/create");
 
 const getUsers = require("./users/get");
 
+const getLabelsByProject = require("./labels/get");
+
 
 // manage form to create a new project with input name and labels
 
@@ -171,62 +173,50 @@ app.post("/new_project", async(req, res) => {
 // })
 
 
-// return labels list
-
-app.post("/labels", async(req, res) => {
-
-    console.log("chiamata partita");
-
-    const {nameProject} = req.body;
-
-    const user = await getUsers();
-    let projects = await api.Users.projects(user.id);
-    for (let i = 0; i < projects.length; i++) {
-      if (projects[i].name === nameProject) {
-        let labels = await api.Labels.all(projects[i].id);
-
-        console.log(labels);
-
-        res.send(labels.map(label => ({
-          name: label.name,
-          id: label.id
-          })
-        ));
-
-        // res.send(labels);
-        break;
-      }
-    }
-
-})
-
 
 // return labels list
 
 app.get("/labels/:projectLabel", async(req, res) => {
 
-  console.log("chiamata partita");
-
   const {projectLabel} = req.params;
 
+  let labels = await getLabelsByProject(projectLabel);
+
+  res.send(labels.map(label => ({
+      name: label.name,
+      id: label.id
+    })
+  ));
+
+})
+
+
+// create label
+
+app.post("/new_label", async(req, res) => {
+
+  const {nameProject} = req.body;
+  const {nameLabel} = req.body;
+  const {colourLabel} = req.body;
+
+  
+  // const createLabel = async () => {
   const user = await getUsers();
+
   let projects = await api.Users.projects(user.id);
   for (let i = 0; i < projects.length; i++) {
-    if (projects[i].name === projectLabel) {
-      let labels = await api.Labels.all(projects[i].id);
-
-      console.log(labels);
-
-      res.send(labels.map(label => ({
-        name: label.name,
-        id: label.id
-        })
-      ));
-
-      // res.send(labels);
+    if (projects[i].name === nameProject) {
+      await api.Labels.create(projects[i].id, nameLabel, colourLabel);
       break;
     }
   }
+
+  // let newLabel = await api.Labels.create(35533320, "labelFromNode", "red");     // project id: 35533320, label name: "labelFromNode", label color: "red"
+
+  //   return newLabel
+  // }
+
+  // createLabel().then(label => console.log(label.name))
 
 })
 
