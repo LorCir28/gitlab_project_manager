@@ -26,11 +26,25 @@ function App() {
   }, [])
 
   const [labels, setLabels] = useState([]);
-  // useEffect(() => {
-  //   fetch("http://localhost:8000/labels")
-  //   .then(res => {return res.json()})
-  //   .then(data => setLabels(data))
-  // }, [])
+
+  const [projectLabel, setProjectLabel] = useState("");
+  useEffect(() => {
+    fetch(`http://localhost:8000/labels/${projectLabel}`)
+    .then(res => {return res.json()})
+    .then(data => {
+      setLabels(data);
+      console.log(labels);
+    })
+  }, [projectLabel])
+
+  // axios.post(`http://localhost:8000/labels`, {
+  //               nameProject: nameProject,
+  //               }).then(res => {
+  //                     setLabels(res.data);
+  //                     // labels = data;
+  //                     // console.log("DATA: ",data);
+  //                     console.log("LABELS: ", labels);
+  //                   });
 
   const [inputLabels, setInputLabel] = useState([]);
 
@@ -159,31 +173,19 @@ function App() {
             ))}
             </select>
 
-            {/* <h2 id="h1_labels"><b>LABELS:</b></h2>
-            {labels && labels.map((label) => (
-              <ProjectItem item={label} key={label.id}/>
-            ))} */}
-
             <br />
             <br />
+            
 
+            <button className="btn btn-info" id="btn-listlabelspopup" onClick={() => {
 
-            <button className="btn btn-info" onClick={() => {
-
-              const nameProject = document.getElementById("project_label").value;
-              axios.post(`http://localhost:8000/labels`, {
-                nameProject: nameProject,
-              }).then(res => {return res.json()})
-                  .then(data => setLabels(data));
-
-              // <h2 id="h1_labels"><b>LABELS:</b></h2>
-
+              setProjectLabel(document.getElementById("project_label").value);
 
             }}>
               list labels
             </button>
 
-            <h2 id="h1_labels"><b>LABELS:</b></h2>
+            
             {labels && labels.map((label) => (
               <ProjectItem item={label} key={label.id}/>
             ))}
@@ -191,7 +193,7 @@ function App() {
           </Popup>
 
 
-          {/* create new label popup
+          {/* create new label popup */}
           <Popup trigger={ButtonPopupCreateLabel} setTrigger={setButtonPopupCreateLabel}>
               <input type={"text"} placeholder={"name of label"} id={"nameLabel"} required></input>
 
@@ -220,7 +222,7 @@ function App() {
 
           </Popup>
 
-          delete label popup
+          {/* delete label popup
           <Popup trigger={ButtonPopupDeleteLabel} setTrigger={setButtonPopupDeleteLabel}>
 
             label name<select id="label_to_delete">
@@ -252,26 +254,4 @@ function App() {
 }
 
 export default App;
-
-
-// import React, {Component} from "react";
-
-// class App extends Component{
-//   state = {
-//     showMessage: false
-//   }
-//   onButtonClickHandler = () => {
-//    this.setState({showMessage: true});
-//   };
-
-//   render(){ 
-//     return(<div className="App">
-//      {this.state.showMessage && <p>Hi</p>}
-//       <button onClick={this.onButtonClickHandler}>Enter</button>
-//     </div>);
-
-//   }
-// }
-
-// export default App;
           

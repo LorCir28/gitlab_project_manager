@@ -171,11 +171,11 @@ app.post("/new_project", async(req, res) => {
 // })
 
 
-// return groups list
+// return labels list
 
 app.post("/labels", async(req, res) => {
 
-    console.log("chiamata effettuata");
+    console.log("chiamata partita");
 
     const {nameProject} = req.body;
 
@@ -192,9 +192,41 @@ app.post("/labels", async(req, res) => {
           id: label.id
           })
         ));
+
+        // res.send(labels);
         break;
       }
     }
+
+})
+
+
+// return labels list
+
+app.get("/labels/:projectLabel", async(req, res) => {
+
+  console.log("chiamata partita");
+
+  const {projectLabel} = req.params;
+
+  const user = await getUsers();
+  let projects = await api.Users.projects(user.id);
+  for (let i = 0; i < projects.length; i++) {
+    if (projects[i].name === projectLabel) {
+      let labels = await api.Labels.all(projects[i].id);
+
+      console.log(labels);
+
+      res.send(labels.map(label => ({
+        name: label.name,
+        id: label.id
+        })
+      ));
+
+      // res.send(labels);
+      break;
+    }
+  }
 
 })
 
