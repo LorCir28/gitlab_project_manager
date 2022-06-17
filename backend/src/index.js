@@ -86,8 +86,6 @@ const createBoardList = require("./board_lists/create");
 
 const getUsers = require("./users/get");
 
-const getGroups = require("./groups/get");
-
 
 // manage form to create a new project with input name and labels
 
@@ -143,33 +141,61 @@ app.post("/new_project", async(req, res) => {
 })
 
 
+// // return groups list
+
+// app.get("/groups", async(req, res) => {
+//   let groups = await getGroups();
+
+//   console.log(groups);
+  
+//   res.send(groups.map(group => ({
+//     name: group.name,
+//     id: group.id
+//   })
+// ));
+
+// })
+
+
+// // create group
+
+// app.post("/new_group", async(req, res) => {
+//   await api.Groups.create("groupFromNode", "");
+// })
+
+
+// // delete group
+
+// app.post("/delete_group", async(req, res) => {
+//   await api.Groups.remove(id);
+// })
+
+
 // return groups list
 
-app.get("/groups", async(req, res) => {
-  let groups = await getGroups();
+app.post("/labels", async(req, res) => {
 
-  console.log(groups);
-  
-  res.send(groups.map(group => ({
-    name: group.name,
-    id: group.id
-  })
-));
+    console.log("chiamata effettuata");
 
-})
+    const {nameProject} = req.body;
 
+    const user = await getUsers();
+    let projects = await api.Users.projects(user.id);
+    for (let i = 0; i < projects.length; i++) {
+      if (projects[i].name === nameProject) {
+        let labels = await api.Labels.all(projects[i].id);
 
-// create group
+        console.log(labels);
 
-app.post("/new_group", async(req, res) => {
-  await api.Groups.create("groupFromNode", "");
-})
+        res.send(labels.map(label => ({
+          name: label.name,
+          id: label.id
+          })
+        ));
+        break;
+      }
+    }
 
-
-// delete group
-
-app.post("/delete_group", async(req, res) => {
-  await api.Groups.remove(id);
 })
 
 

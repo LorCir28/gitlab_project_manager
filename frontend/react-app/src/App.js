@@ -14,9 +14,9 @@ function App() {
   const [ButtonPopupCreateProject, setButtonPopupCreateProject] = useState(false);
   const [ButtonPopupDeleteProject, setButtonPopupDeleteProject] = useState(false);
 
-  const [ButtonPopupListGroups, setButtonPopupListGroups] = useState(false);
-  const [ButtonPopupCreateGroup, setButtonPopupCreateGroup] = useState(false);
-  const [ButtonPopupDeleteGroup, setButtonPopupDeleteGroup] = useState(false);
+  const [ButtonPopupListLabels, setButtonPopupListLabels] = useState(false);
+  const [ButtonPopupCreateLabel, setButtonPopupCreateLabel] = useState(false);
+  const [ButtonPopupDeleteLabel, setButtonPopupDeleteLabel] = useState(false);
 
   const [projects, setProjects] = useState([]);
   useEffect(() => {
@@ -25,12 +25,12 @@ function App() {
     .then(data => setProjects(data))
   }, [])
 
-  const [groups, setGroups] = useState([]);
-  useEffect(() => {
-    fetch("http://localhost:8000/groups")
-    .then(res => {return res.json()})
-    .then(data => setGroups(data))
-  }, [])
+  const [labels, setLabels] = useState([]);
+  // useEffect(() => {
+  //   fetch("http://localhost:8000/labels")
+  //   .then(res => {return res.json()})
+  //   .then(data => setLabels(data))
+  // }, [])
 
   const [inputLabels, setInputLabel] = useState([]);
 
@@ -44,8 +44,8 @@ function App() {
         <div className="row">
           <Card setButtonPopupList={setButtonPopupListProjects} setButtonPopupCreate={setButtonPopupCreateProject}
             setButtonPopupDelete={setButtonPopupDeleteProject} item={"projects"} />
-          <Card setButtonPopupList={setButtonPopupListGroups} setButtonPopupCreate={setButtonPopupCreateGroup}
-            setButtonPopupDelete={setButtonPopupDeleteGroup} item={"groups"} />
+          <Card setButtonPopupList={setButtonPopupListLabels} setButtonPopupCreate={setButtonPopupCreateLabel}
+            setButtonPopupDelete={setButtonPopupDeleteLabel} item={"labels"} />
         </div>
       </div>
 
@@ -56,6 +56,7 @@ function App() {
           <ProjectItem item={project} key={project.id}/>
         ))}
       </Popup>
+
 
       {/* create new project popup */}
       <Popup trigger={ButtonPopupCreateProject} setTrigger={setButtonPopupCreateProject}>
@@ -149,69 +150,101 @@ function App() {
           </Popup>
 
 
-          {/* list group popup */}
-          <Popup trigger={ButtonPopupListGroups} setTrigger={setButtonPopupListGroups}>
-            <h2 id="h1_projects"><b>GROUPS:</b></h2>
-            {groups && groups.map((group) => (
-              <ProjectItem item={group} key={group.id}/>
+          {/* list labels popup */}
+          <Popup trigger={ButtonPopupListLabels} setTrigger={setButtonPopupListLabels}>
+
+            project name<select id="project_label">
+            {projects && projects.map((project) => (
+              <option><ProjectItem item={project} key={project.id}/></option>
             ))}
+            </select>
+
+            {/* <h2 id="h1_labels"><b>LABELS:</b></h2>
+            {labels && labels.map((label) => (
+              <ProjectItem item={label} key={label.id}/>
+            ))} */}
+
+            <br />
+            <br />
+
+
+            <button className="btn btn-info" onClick={() => {
+
+              const nameProject = document.getElementById("project_label").value;
+              axios.post(`http://localhost:8000/labels`, {
+                nameProject: nameProject,
+              }).then(res => {return res.json()})
+                  .then(data => setLabels(data));
+
+              // <h2 id="h1_labels"><b>LABELS:</b></h2>
+
+
+            }}>
+              list labels
+            </button>
+
+            <h2 id="h1_labels"><b>LABELS:</b></h2>
+            {labels && labels.map((label) => (
+              <ProjectItem item={label} key={label.id}/>
+            ))}
+
           </Popup>
 
 
-          {/* create new group popup */}
-          <Popup trigger={ButtonPopupCreateGroup} setTrigger={setButtonPopupCreateGroup}>
-              <input type={"text"} placeholder={"name of group"} id={"nameGroup"} required></input>
+          {/* create new label popup
+          <Popup trigger={ButtonPopupCreateLabel} setTrigger={setButtonPopupCreateLabel}>
+              <input type={"text"} placeholder={"name of label"} id={"nameLabel"} required></input>
 
               <br />
               <br />
 
               <button type="button" className="btn btn-success" onClick={() => {
 
-                const nameGroup = document.getElementById("nameGroup").value;
+                const nameLabel = document.getElementById("nameLabel").value;
 
-                // control: group name can't be empty
-                if (nameGroup === "") {
-                  alert("group name can't be empty");
+                // control: label name can't be empty
+                if (nameLabel === "") {
+                  alert("label name can't be empty");
                   return false;
                 }
 
-                axios.post(`http://localhost:8000/new_group`, {
-                  nameGroup: nameGroup,
+                axios.post(`http://localhost:8000/new_label`, {
+                  nameLabel: nameLabel,
                 });
 
-                setButtonPopupCreateGroup(false);
+                setButtonPopupCreateLabel(false);
                 window.location.reload();
               }}>
-                create group
+                create label
               </button>
 
           </Popup>
 
-          {/* delete group popup */}
-          <Popup trigger={ButtonPopupDeleteGroup} setTrigger={setButtonPopupDeleteGroup}>
+          delete label popup
+          <Popup trigger={ButtonPopupDeleteLabel} setTrigger={setButtonPopupDeleteLabel}>
 
-            group name<select id="group_to_delete">
-            {groups && groups.map((group) => (
-              <option><ProjectItem item={group} key={group.id}/></option>
+            label name<select id="label_to_delete">
+            {labels && labels.map((label) => (
+              <option><ProjectItem item={label} key={label.id}/></option>
             ))}
             </select>
 
             <br />
             <br />
 
-            <button type="button" className="btn btn-danger" id="btn-deletegrouppopup" onClick={() => {
-              const nameGroup = document.getElementById("group_to_delete").value;
-              axios.post(`http://localhost:8000/delete_group`, {
+            <button type="button" className="btn btn-danger" id="btn-deletelabelpopup" onClick={() => {
+              const nameGroup = document.getElementById("label_to_delete").value;
+              axios.post(`http://localhost:8000/delete_label`, {
                 nameGroup: nameGroup,
               });
 
-              setButtonPopupDeleteGroup(false);
+              setButtonPopupDeleteLabel(false);
               window.location.reload();
             }}>
-              delete project
+              delete label
             </button>
 
-          </Popup>
+          </Popup> */}
 
     </div>
     </>
@@ -221,5 +254,24 @@ function App() {
 export default App;
 
 
+// import React, {Component} from "react";
 
+// class App extends Component{
+//   state = {
+//     showMessage: false
+//   }
+//   onButtonClickHandler = () => {
+//    this.setState({showMessage: true});
+//   };
+
+//   render(){ 
+//     return(<div className="App">
+//      {this.state.showMessage && <p>Hi</p>}
+//       <button onClick={this.onButtonClickHandler}>Enter</button>
+//     </div>);
+
+//   }
+// }
+
+// export default App;
           
