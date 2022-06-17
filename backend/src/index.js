@@ -199,8 +199,6 @@ app.post("/new_label", async(req, res) => {
   const {nameLabel} = req.body;
   const {colourLabel} = req.body;
 
-  
-  // const createLabel = async () => {
   const user = await getUsers();
 
   let projects = await api.Users.projects(user.id);
@@ -211,14 +209,37 @@ app.post("/new_label", async(req, res) => {
     }
   }
 
-  // let newLabel = await api.Labels.create(35533320, "labelFromNode", "red");     // project id: 35533320, label name: "labelFromNode", label color: "red"
-
-  //   return newLabel
-  // }
-
-  // createLabel().then(label => console.log(label.name))
-
 })
+
+
+// delete label
+
+app.post("/delete_label", async (req, res) => {
+
+  const {nameProject} = req.body;
+  const {nameLabel} = req.body;
+
+  const user = await getUsers();
+
+  let projects = await api.Users.projects(user.id);
+  for (let i = 0; i < projects.length; i++) {
+    if (projects[i].name === nameProject) {
+      console.log("project found");
+      let labels = await api.Labels.all(projects[i].id);
+      for (let j = 0; j < labels.length; j++) {
+        if (labels[j].name === nameLabel) {
+          console.log("label found");
+          await api.Labels.remove(projects[i].id, labels[j].id);
+          res.send("label deleted");
+          break;
+        }
+      }
+    }
+  }
+
+  res.send("label not deleted");
+
+}) 
 
 
 

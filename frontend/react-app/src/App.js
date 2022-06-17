@@ -212,7 +212,7 @@ function App() {
               <br />
               <br />
 
-              project name<select id="project__create_label">
+              project name<select id="project_create_label">
               {projects && projects.map((project) => (
                 <option><ProjectItem item={project} key={project.id}/></option>
               ))}
@@ -224,7 +224,7 @@ function App() {
               <button type="button" className="btn btn-success" id = "btn-createlabelpopup" onClick={() => {
 
                 const nameLabel = document.getElementById("nameLabel").value;
-                const nameProject = document.getElementById("project__create_label").value;
+                const nameProject = document.getElementById("project_create_label").value;
                 const colourLabel = document.getElementById("colour-label-popup").value;
 
                 // control: label name can't be empty
@@ -247,8 +247,17 @@ function App() {
 
           </Popup>
 
-          {/* delete label popup
+          {/* delete label popup */}
           <Popup trigger={ButtonPopupDeleteLabel} setTrigger={setButtonPopupDeleteLabel}>
+
+            project name<select id="project_create_label" onChange={() => setProjectLabel(document.getElementById("project_create_label").value)}>
+              <option></option>
+              {projects && projects.map((project) => (
+                <option><ProjectItem item={project} key={project.id}/></option>
+              ))}
+            </select>
+
+            
 
             label name<select id="label_to_delete">
             {labels && labels.map((label) => (
@@ -260,9 +269,25 @@ function App() {
             <br />
 
             <button type="button" className="btn btn-danger" id="btn-deletelabelpopup" onClick={() => {
-              const nameGroup = document.getElementById("label_to_delete").value;
+
+              const nameProject = document.getElementById("project_create_label").value;
+              const nameLabel = document.getElementById("label_to_delete").value;
+
+              // control: project name can't be empty
+              if (document.getElementById("project_create_label").value === "") {
+                alert("project name can't be empty");
+                return false;
+              }
+
+              // control: label name can't be empty
+              if (document.getElementById("label_to_delete").value === "") {
+                alert("label name can't be empty");
+                return false;
+              }
+
               axios.post(`http://localhost:8000/delete_label`, {
-                nameGroup: nameGroup,
+                nameProject: nameProject,
+                nameLabel: nameLabel
               });
 
               setButtonPopupDeleteLabel(false);
@@ -271,7 +296,7 @@ function App() {
               delete label
             </button>
 
-          </Popup> */}
+          </Popup>
 
     </div>
     </>
