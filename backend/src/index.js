@@ -1,57 +1,3 @@
-
-// const express = require("express");
-
-// const { Gitlab } = require('@gitbeaker/node');
-
-// const api = new Gitlab({ 
-//   token : 'glpat-zvPjAxXA2jjToS4MMDzx',
-// });
-
-// const app = express();
-
-// const createNewProject = require("./projects/create");
-
-// const createRequiredBoard = require("./boards/create");
-
-// const createLabel = require("./labels/create");
-
-// const createBoardList = require("./board_lists/create");
-
-
-// // automate the creation of the required board at the creation of a new project
-
-// app.post("/new_project/:projectName", async(req, res) => {
-//   const {projectName} = req.params;
-
-//   const newProject = await createNewProject(projectName);
-//   const requiredBoard = await createRequiredBoard(newProject.id);
-
-//   // with Promise.all() I resolve before all the labels at the same time, and then I create the boardlists one after the other
-
-//   const Labels = [createLabel(newProject.id, "Resources", "blue"), createLabel(newProject.id, "To Do", "orange"), 
-//                   createLabel(newProject.id, "Doing", "green"), createLabel(newProject.id, "Blocked", "red"), 
-//                   createLabel(newProject.id, "Quality Check", "yellow"), createLabel(newProject.id, "Acceptance Gateway", "violet")];
-
-//   const labels = await Promise.all(Labels);
-
-//   for (const label of labels) {
-//     await createBoardList(newProject.id, requiredBoard.id, label.id);
-//   }
-  
-
-//   res.send("created new project and required board in it");
-// })
-
-
-
-// app.listen(8000, () => {
-//   console.log("server is listening on port 8000...");
-// });
-
-
-////////////////////////////////////////////////////////////////////////////////////////
-
-
 const express = require("express");
 
 const { Gitlab } = require('@gitbeaker/node');
@@ -87,6 +33,12 @@ const createBoardList = require("./board_lists/create");
 const getUsers = require("./users/get");
 
 const getLabelsByProject = require("./labels/get");
+const getProjects = require("./projects/get");
+const deleteProject = require("./projects/delete");
+const deleteLabel = require("./labels/delete");
+const getProjectMembers = require("./projectMember/get");
+const addProjectMember = require("./projectMember/add");
+const removeProjectMember = require("./projectMember/remove");
 
 
 // manage form to create a new project with input name and labels
@@ -95,8 +47,8 @@ const getLabelsByProject = require("./labels/get");
 // return projects list
 
 app.get("/projects", async(req, res) => {
-  let user = await api.Users.current();
-  let projects = await api.Users.projects(user.id);
+  let user = await getUsers();
+  let projects = await getProjects(user.id);
   res.send(projects.map(project => ({
       name: project.name,
       id: project.id
@@ -104,24 +56,6 @@ app.get("/projects", async(req, res) => {
   ));
 })
 
-
-// delete project
-
-app.post("/delete_project", async(req, res) => {
-  const {nameProject} = req.body;
-
-  const user = await getUsers();
-
-  let projects = await api.Users.projects(user.id);
-  for (let i = 0; i < projects.length; i++) {
-    if (projects[i].name === nameProject) {
-      api.Projects.remove(projects[i].id);
-      res.send("project deleted");
-      break;
-    }
-  }
-
-})
 
 // create new project
 
@@ -134,12 +68,33 @@ app.post("/new_project", async(req, res) => {
   const requiredBoard = await createRequiredBoard(newProject.id);
 
   inputLabels.map(async (inputLabel) => {
-  let label = await createLabel(newProject.id, inputLabel.nameLabel, inputLabel.colourLabel);
-  await createBoardList(newProject.id, requiredBoard.id, label.id);
+    let label = await createLabel(nameProject, inputLabel.nameLabel, inputLabel.colourLabel);
+    await createBoardList(newProject.id, requiredBoard.id, label.id);
   });
 
   
   res.send("created new project and required board in it");
+})
+
+
+// delete project
+
+app.post("/delete_project", async(req, res) => {
+  const {nameProject} = req.body;
+
+  // const user = await getUsers();
+
+  // let projects = await api.Users.projects(user.id);
+  // for (let i = 0; i < projects.length; i++) {
+  //   if (projects[i].name === nameProject) {
+  //     api.Projects.remove(projects[i].id);
+  //     res.send("project deleted");
+  //     break;
+  //   }
+  // }
+
+  await deleteProject(nameProject);
+
 })
 
 
@@ -168,15 +123,8 @@ app.post("/new_label", async(req, res) => {
   const {nameLabel} = req.body;
   const {colourLabel} = req.body;
 
-  const user = await getUsers();
 
-  let projects = await api.Users.projects(user.id);
-  for (let i = 0; i < projects.length; i++) {
-    if (projects[i].name === nameProject) {
-      await api.Labels.create(projects[i].id, nameLabel, colourLabel);
-      break;
-    }
-  }
+  await createLabel(nameProject, nameLabel, colourLabel);
 
 })
 
@@ -188,20 +136,22 @@ app.post("/delete_label", async (req, res) => {
   const {nameProject} = req.body;
   const {nameLabel} = req.body;
 
-  const user = await getUsers();
+  // const user = await getUsers();
 
-  let projects = await api.Users.projects(user.id);
-  for (let i = 0; i < projects.length; i++) {
-    if (projects[i].name === nameProject) {
-      let labels = await api.Labels.all(projects[i].id);
-      for (let j = 0; j < labels.length; j++) {
-        if (labels[j].name === nameLabel) {
-          await api.Labels.remove(projects[i].id, labels[j].id);
-          break;
-        }
-      }
-    }
-  }
+  // let projects = await api.Users.projects(user.id);
+  // for (let i = 0; i < projects.length; i++) {
+  //   if (projects[i].name === nameProject) {
+  //     let labels = await api.Labels.all(projects[i].id);
+  //     for (let j = 0; j < labels.length; j++) {
+  //       if (labels[j].name === nameLabel) {
+  //         await api.Labels.remove(projects[i].id, labels[j].id);
+  //         break;
+  //       }
+  //     }
+  //   }
+  // }
+
+  await deleteLabel(nameProject, nameLabel);
 
 }) 
 
@@ -212,16 +162,18 @@ app.get("/projectsMembers/:project", async(req, res) => {
 
   const {project} = req.params;
 
-  let user = await api.Users.current();
-  let projects = await api.Users.projects(user.id);
+  // let user = await api.Users.current();
+  // let projects = await api.Users.projects(user.id);
 
-  let projectMembers;
+  // let projectMembers;
 
-  for (let i = 0; i < projects.length; i++) {
-    if (projects[i].name === project) {
-      projectMembers = await api.ProjectMembers.all(projects[i].id);
-    }
-  }
+  // for (let i = 0; i < projects.length; i++) {
+  //   if (projects[i].name === project) {
+  //     projectMembers = await api.ProjectMembers.all(projects[i].id);
+  //   }
+  // }
+
+  let projectMembers = await getProjectMembers(project);
 
   res.send(projectMembers.map(projectMember => ({
       name: projectMember.name,
@@ -240,48 +192,49 @@ app.post("/new_project_member", async(req, res) => {
   const {nameUser} = req.body;
   const {accessLevel} = req.body;
 
-  let AccessLevel;
+  // let AccessLevel;
 
-  if (accessLevel === "Guest") {
-    AccessLevel = 10;
-  }
-  else if (accessLevel === "Reporter") {
-    AccessLevel = 20;
-  }
-  else if (accessLevel === "Developer") {
-    AccessLevel = 30;
-  }
-  else if (accessLevel === "Maintainer") {
-    AccessLevel = 40;
-  }
+  // if (accessLevel === "Guest") {
+  //   AccessLevel = 10;
+  // }
+  // else if (accessLevel === "Reporter") {
+  //   AccessLevel = 20;
+  // }
+  // else if (accessLevel === "Developer") {
+  //   AccessLevel = 30;
+  // }
+  // else if (accessLevel === "Maintainer") {
+  //   AccessLevel = 40;
+  // }
 
-  let user_to_add = await api.Users.search(nameUser);
+  // let user_to_add = await api.Users.search(nameUser);
 
-  let user = await api.Users.current();
-  let projects = await api.Users.projects(user.id);
-  // console.log(user_to_add);
+  // let user = await api.Users.current();
+  // let projects = await api.Users.projects(user.id);
 
-  let projectId;
-  let userId;
-  if (user_to_add.length == 1) {
-    userId = user_to_add[0].id;
-    for (let i = 0; i < projects.length; i++) {
-      if (projects[i].name === nameProject) {
-        projectId = projects[i].id;
-        projectMembers = await api.ProjectMembers.all(projects[i].id);
-        for (let j = 0; j < projectMembers.length; j++) {
-          if (projectMembers[j].username == nameUser) {
-            res.send("utente fa già parte del gruppo");
-            return;
-          }
-        }
-      }
-    }
-    api.ProjectMembers.add(projectId, userId, AccessLevel);
-  }
-  else {
-    res.send("utente non trovato, impossibile aggiungerlo");
-  }
+  // let projectId;
+  // let userId;
+  // if (user_to_add.length == 1) {
+  //   userId = user_to_add[0].id;
+  //   for (let i = 0; i < projects.length; i++) {
+  //     if (projects[i].name === nameProject) {
+  //       projectId = projects[i].id;
+  //       projectMembers = await api.ProjectMembers.all(projects[i].id);
+  //       for (let j = 0; j < projectMembers.length; j++) {
+  //         if (projectMembers[j].username == nameUser) {
+  //           res.send("utente fa già parte del gruppo");
+  //           return;
+  //         }
+  //       }
+  //     }
+  //   }
+  //   api.ProjectMembers.add(projectId, userId, AccessLevel);
+  // }
+  // else {
+  //   res.send("utente non trovato, impossibile aggiungerlo");
+  // }
+
+  addProjectMember(nameProject, nameUser, accessLevel);
 
 })
 
@@ -293,20 +246,22 @@ app.post("/delete_project_member", async (req, res) => {
   const {nameProject} = req.body;
   const {nameMember} = req.body;
 
-  const user = await getUsers();
+  // const user = await getUsers();
 
-  let projects = await api.Users.projects(user.id);
-  for (let i = 0; i < projects.length; i++) {
-    if (projects[i].name === nameProject) {
-      let members = await api.ProjectMembers.all(projects[i].id);
-      for (let j = 0; j < members.length; j++) {
-        if (members[j].name === nameMember) {
-          await api.ProjectMembers.remove(projects[i].id, members[j].id);
-          res.send("member deleted");
-        }
-      }
-    }
-  }
+  // let projects = await api.Users.projects(user.id);
+  // for (let i = 0; i < projects.length; i++) {
+  //   if (projects[i].name === nameProject) {
+  //     let members = await api.ProjectMembers.all(projects[i].id);
+  //     for (let j = 0; j < members.length; j++) {
+  //       if (members[j].name === nameMember) {
+  //         await api.ProjectMembers.remove(projects[i].id, members[j].id);
+  //         res.send("member deleted");
+  //       }
+  //     }
+  //   }
+  // }
+
+  await removeProjectMember(nameProject, nameMember);
 
 }) 
 

@@ -26,21 +26,6 @@
   margin-left: 2%;
 }
 
-#btn-deleteprojectpopup {
-  position:relative;
-  left: 420px;
-}
-
-#btn-listlabelspopup {
-  position:relative;
-  left: 420px;
-}
-
-#btn-createlabelpopup {
-  position:relative;
-  left: 420px;
-}
-
 #nameLabel {
   margin-right: 5%;
 }
