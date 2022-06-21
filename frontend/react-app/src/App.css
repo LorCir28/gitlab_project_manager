@@ -41,4 +41,21 @@
   left: 420px;
 }
 
+#nameLabel {
+  margin-right: 5%;
+}
+
+#colour-label-popup {
+  margin-left: 2%;
+}
+
+#project_delete_label {
+  margin-left: 2%;
+  margin-right: 5%;
+}
+
+#label_to_delete {
+  margin-left: 2%;
+}
+
 

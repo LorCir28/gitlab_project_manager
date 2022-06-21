@@ -37,15 +37,6 @@ function App() {
     })
   }, [projectLabel])
 
-  // axios.post(`http://localhost:8000/labels`, {
-  //               nameProject: nameProject,
-  //               }).then(res => {
-  //                     setLabels(res.data);
-  //                     // labels = data;
-  //                     // console.log("DATA: ",data);
-  //                     console.log("LABELS: ", labels);
-  //                   });
-
   const [inputLabels, setInputLabel] = useState([]);
 
   return (
@@ -250,7 +241,7 @@ function App() {
           {/* delete label popup */}
           <Popup trigger={ButtonPopupDeleteLabel} setTrigger={setButtonPopupDeleteLabel}>
 
-            project name<select id="project_create_label" onChange={() => setProjectLabel(document.getElementById("project_create_label").value)}>
+            project name<select id="project_delete_label" onChange={() => setProjectLabel(document.getElementById("project_delete_label").value)}>
               <option></option>
               {projects && projects.map((project) => (
                 <option><ProjectItem item={project} key={project.id}/></option>
@@ -270,11 +261,11 @@ function App() {
 
             <button type="button" className="btn btn-danger" id="btn-deletelabelpopup" onClick={() => {
 
-              const nameProject = document.getElementById("project_create_label").value;
+              const nameProject = document.getElementById("project_delete_label").value;
               const nameLabel = document.getElementById("label_to_delete").value;
 
               // control: project name can't be empty
-              if (document.getElementById("project_create_label").value === "") {
+              if (document.getElementById("project_delete_label").value === "") {
                 alert("project name can't be empty");
                 return false;
               }
