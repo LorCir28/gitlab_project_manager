@@ -18,6 +18,10 @@ function App() {
   const [ButtonPopupCreateLabel, setButtonPopupCreateLabel] = useState(false);
   const [ButtonPopupDeleteLabel, setButtonPopupDeleteLabel] = useState(false);
 
+  const [ButtonPopupListProjectMembers, setButtonPopupListProjectMembers] = useState(false);
+  const [ButtonPopupCreateProjectMember, setButtonPopupCreateProjectMember] = useState(false);
+  const [ButtonPopupDeleteProjectMember, setButtonPopupDeleteProjectMember] = useState(false);
+
   const [projects, setProjects] = useState([]);
   useEffect(() => {
     fetch("http://localhost:8000/projects")
@@ -26,6 +30,7 @@ function App() {
   }, [])
 
   const [labels, setLabels] = useState([]);
+  const [projectMembers, setProjectMembers] = useState([]);
 
   const [projectLabel, setProjectLabel] = useState("");
   useEffect(() => {
@@ -33,9 +38,19 @@ function App() {
     .then(res => {return res.json()})
     .then(data => {
       setLabels(data);
-      console.log(labels);
+      // console.log(labels);
     })
   }, [projectLabel])
+
+  const [project, setProject] = useState("");
+  useEffect(() => {
+    fetch(`http://localhost:8000/projectsMembers/${project}`)
+    .then(res => {return res.json()})
+    .then(data => {
+      setProjectMembers(data);
+      // console.log(projectMembers);
+    })
+  }, [project])
 
   const [inputLabels, setInputLabel] = useState([]);
 
@@ -51,6 +66,8 @@ function App() {
             setButtonPopupDelete={setButtonPopupDeleteProject} item={"projects"} />
           <Card setButtonPopupList={setButtonPopupListLabels} setButtonPopupCreate={setButtonPopupCreateLabel}
             setButtonPopupDelete={setButtonPopupDeleteLabel} item={"labels"} />
+          <Card setButtonPopupList={setButtonPopupListProjectMembers} setButtonPopupCreate={setButtonPopupCreateProjectMember}
+            setButtonPopupDelete={setButtonPopupDeleteProjectMember} item={"project members"} />
         </div>
       </div>
 
@@ -285,6 +302,137 @@ function App() {
               window.location.reload();
             }}>
               delete label
+            </button>
+
+          </Popup>
+
+
+          {/* list project members popup */}
+          <Popup trigger={ButtonPopupListProjectMembers} setTrigger={setButtonPopupListProjectMembers}>
+
+            project name<select id="project_members">
+            {projects && projects.map((project) => (
+              <option><ProjectItem item={project} key={project.id}/></option>
+            ))}
+            </select>
+
+            <br />
+            <br />
+            
+
+            <button className="btn btn-info" id="btn-listprojectmemberspopup" onClick={() => {
+
+              setProject(document.getElementById("project_members").value);
+
+            }}>
+              list members
+            </button>
+
+            
+            {projectMembers && projectMembers.map((projectMember) => (
+              <ProjectItem item={projectMember} key={projectMember.id}/>
+            ))}
+
+          </Popup>
+
+
+          {/* create new project member popup */}
+          <Popup trigger={ButtonPopupCreateProjectMember} setTrigger={setButtonPopupCreateProjectMember}>
+              <input type={"text"} placeholder={"username"} id={"nameUser"} required></input>
+
+              access level<select id="accessLevel">
+                <option>Guest</option>
+                <option>Reporter</option>
+                <option>Developer</option>
+                <option>Maintainer</option>
+              </select>
+
+              <br />
+              <br />
+
+              project name<select id="project_create_member">
+              {projects && projects.map((project) => (
+                <option><ProjectItem item={project} key={project.id}/></option>
+              ))}
+              </select>
+
+              <br />
+              <br />
+
+              <button type="button" className="btn btn-success" id = "btn-createprojectmemberpopup" onClick={() => {
+
+                const nameUser = document.getElementById("nameUser").value;
+                const nameProject = document.getElementById("project_create_member").value;
+                const accessLevel = document.getElementById("accessLevel").value;
+
+                // control: user name can't be empty
+                if (nameUser === "") {
+                  alert("username can't be empty");
+                  return false;
+                }
+
+                axios.post(`http://localhost:8000/new_project_member`, {
+                  nameUser: nameUser,
+                  nameProject: nameProject,
+                  accessLevel: accessLevel
+                })
+
+                setButtonPopupCreateProjectMember(false);
+                window.location.reload();
+              }}>
+                add user
+              </button>
+
+          </Popup>
+
+
+           {/* delete project member popup */}
+           <Popup trigger={ButtonPopupDeleteProjectMember} setTrigger={setButtonPopupDeleteProjectMember}>
+
+            project name<select id="project_delete_member" onChange={() => setProject(document.getElementById("project_delete_member").value)}>
+              <option></option>
+              {projects && projects.map((project) => (
+                <option><ProjectItem item={project} key={project.id}/></option>
+              ))}
+            </select>
+
+
+
+            member<select id="member_to_delete">
+            {projectMembers && projectMembers.map((projectMember) => (
+              <option><ProjectItem item={projectMember} key={projectMember.id}/></option>
+            ))}
+            </select>
+
+            <br />
+            <br />
+
+            <button type="button" className="btn btn-danger" id="btn-deleteprojectmemberpopup" onClick={() => {
+
+              const nameProject = document.getElementById("project_delete_member").value;
+              const nameMember = document.getElementById("member_to_delete").value;
+
+              // control: project name can't be empty
+              if (document.getElementById("project_delete_member").value === "") {
+                alert("project name can't be empty");
+                return false;
+              }
+
+              // control: label name can't be empty
+              if (document.getElementById("member_to_delete").value === "") {
+                alert("member name can't be empty");
+                return false;
+              }
+
+              axios.post(`http://localhost:8000/delete_project_member`, {
+                nameProject: nameProject,
+                nameMember: nameMember
+              });
+
+              setButtonPopupDeleteProjectMember(false);
+              window.location.reload();
+            }}>
+              remove member
             </button>
 
           </Popup>
