@@ -33,11 +33,17 @@ const createBoardList = require("./board_lists/create");
 const getUsers = require("./users/get");
 
 const getLabelsByProject = require("./labels/get");
+
 const getProjects = require("./projects/get");
+
 const deleteProject = require("./projects/delete");
+
 const deleteLabel = require("./labels/delete");
+
 const getProjectMembers = require("./projectMember/get");
+
 const addProjectMember = require("./projectMember/add");
+
 const removeProjectMember = require("./projectMember/remove");
 
 
@@ -82,23 +88,17 @@ app.post("/new_project", async(req, res) => {
 app.post("/delete_project", async(req, res) => {
   const {nameProject} = req.body;
 
-  // const user = await getUsers();
-
-  // let projects = await api.Users.projects(user.id);
-  // for (let i = 0; i < projects.length; i++) {
-  //   if (projects[i].name === nameProject) {
-  //     api.Projects.remove(projects[i].id);
-  //     res.send("project deleted");
-  //     break;
-  //   }
-  // }
-
   await deleteProject(nameProject);
 
 })
 
 
 // return labels list
+
+app.get("/labels", (req, res) => {
+  return;
+})
+
 
 app.get("/labels/:projectLabel", async(req, res) => {
 
@@ -136,21 +136,6 @@ app.post("/delete_label", async (req, res) => {
   const {nameProject} = req.body;
   const {nameLabel} = req.body;
 
-  // const user = await getUsers();
-
-  // let projects = await api.Users.projects(user.id);
-  // for (let i = 0; i < projects.length; i++) {
-  //   if (projects[i].name === nameProject) {
-  //     let labels = await api.Labels.all(projects[i].id);
-  //     for (let j = 0; j < labels.length; j++) {
-  //       if (labels[j].name === nameLabel) {
-  //         await api.Labels.remove(projects[i].id, labels[j].id);
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
-
   await deleteLabel(nameProject, nameLabel);
 
 }) 
@@ -158,20 +143,13 @@ app.post("/delete_label", async (req, res) => {
 
 // return project members list
 
+app.get("/projectsMembers", (req, res) => {
+  return;
+})
+
 app.get("/projectsMembers/:project", async(req, res) => {
 
   const {project} = req.params;
-
-  // let user = await api.Users.current();
-  // let projects = await api.Users.projects(user.id);
-
-  // let projectMembers;
-
-  // for (let i = 0; i < projects.length; i++) {
-  //   if (projects[i].name === project) {
-  //     projectMembers = await api.ProjectMembers.all(projects[i].id);
-  //   }
-  // }
 
   let projectMembers = await getProjectMembers(project);
 
@@ -192,48 +170,6 @@ app.post("/new_project_member", async(req, res) => {
   const {nameUser} = req.body;
   const {accessLevel} = req.body;
 
-  // let AccessLevel;
-
-  // if (accessLevel === "Guest") {
-  //   AccessLevel = 10;
-  // }
-  // else if (accessLevel === "Reporter") {
-  //   AccessLevel = 20;
-  // }
-  // else if (accessLevel === "Developer") {
-  //   AccessLevel = 30;
-  // }
-  // else if (accessLevel === "Maintainer") {
-  //   AccessLevel = 40;
-  // }
-
-  // let user_to_add = await api.Users.search(nameUser);
-
-  // let user = await api.Users.current();
-  // let projects = await api.Users.projects(user.id);
-
-  // let projectId;
-  // let userId;
-  // if (user_to_add.length == 1) {
-  //   userId = user_to_add[0].id;
-  //   for (let i = 0; i < projects.length; i++) {
-  //     if (projects[i].name === nameProject) {
-  //       projectId = projects[i].id;
-  //       projectMembers = await api.ProjectMembers.all(projects[i].id);
-  //       for (let j = 0; j < projectMembers.length; j++) {
-  //         if (projectMembers[j].username == nameUser) {
-  //           res.send("utente fa già parte del gruppo");
-  //           return;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   api.ProjectMembers.add(projectId, userId, AccessLevel);
-  // }
-  // else {
-  //   res.send("utente non trovato, impossibile aggiungerlo");
-  // }
-
   addProjectMember(nameProject, nameUser, accessLevel);
 
 })
@@ -245,21 +181,6 @@ app.post("/delete_project_member", async (req, res) => {
 
   const {nameProject} = req.body;
   const {nameMember} = req.body;
-
-  // const user = await getUsers();
-
-  // let projects = await api.Users.projects(user.id);
-  // for (let i = 0; i < projects.length; i++) {
-  //   if (projects[i].name === nameProject) {
-  //     let members = await api.ProjectMembers.all(projects[i].id);
-  //     for (let j = 0; j < members.length; j++) {
-  //       if (members[j].name === nameMember) {
-  //         await api.ProjectMembers.remove(projects[i].id, members[j].id);
-  //         res.send("member deleted");
-  //       }
-  //     }
-  //   }
-  // }
 
   await removeProjectMember(nameProject, nameMember);
 

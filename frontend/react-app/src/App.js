@@ -38,7 +38,6 @@ function App() {
     .then(res => {return res.json()})
     .then(data => {
       setLabels(data);
-      // console.log(labels);
     })
   }, [projectLabel])
 
@@ -48,7 +47,6 @@ function App() {
     .then(res => {return res.json()})
     .then(data => {
       setProjectMembers(data);
-      // console.log(projectMembers);
     })
   }, [project])
 
@@ -63,11 +61,11 @@ function App() {
           <h1 id="page_title">Welcome to my Gitlab project Manager. Here you can manage your gitlab projects with a simple interface</h1>
         <div className="row">
           <Card setButtonPopupList={setButtonPopupListProjects} setButtonPopupCreate={setButtonPopupCreateProject}
-            setButtonPopupDelete={setButtonPopupDeleteProject} item={"projects"} />
+            setButtonPopupDelete={setButtonPopupDeleteProject} item={"projects"}/>
           <Card setButtonPopupList={setButtonPopupListLabels} setButtonPopupCreate={setButtonPopupCreateLabel}
-            setButtonPopupDelete={setButtonPopupDeleteLabel} item={"labels"} />
+            setButtonPopupDelete={setButtonPopupDeleteLabel} item={"labels"}/>
           <Card setButtonPopupList={setButtonPopupListProjectMembers} setButtonPopupCreate={setButtonPopupCreateProjectMember}
-            setButtonPopupDelete={setButtonPopupDeleteProjectMember} item={"project members"} />
+            setButtonPopupDelete={setButtonPopupDeleteProjectMember} item={"project members"}/>
         </div>
       </div>
 
@@ -88,7 +86,7 @@ function App() {
               <br />
 
               { inputLabels.map((inputLabel) => (
-                <InputLabel id={inputLabels.indexOf(inputLabel)}/>
+                <InputLabel id={inputLabels.indexOf(inputLabel)} key={inputLabels.indexOf(inputLabel)}/>
               )) }
 
               <button type="button" className="btn btn-primary" id="btn-addlabel" onClick={() => {
@@ -150,7 +148,8 @@ function App() {
 
             project name<select id="project_to_delete">
             {projects && projects.map((project) => (
-              <option><ProjectItem item={project} key={project.id}/></option>
+              <option key={project.id}>{project.name}</option>
+              // <option><ProjectItem item={project} key={project.id}/></option>
             ))}
             </select>
 
@@ -177,7 +176,7 @@ function App() {
 
             project name<select id="project_label">
             {projects && projects.map((project) => (
-              <option><ProjectItem item={project} key={project.id}/></option>
+              <option key={project.id}>{project.name}</option>
             ))}
             </select>
 
@@ -222,7 +221,7 @@ function App() {
 
               project name<select id="project_create_label">
               {projects && projects.map((project) => (
-                <option><ProjectItem item={project} key={project.id}/></option>
+                <option key={project.id}>{project.name}</option>
               ))}
               </select>
 
@@ -261,7 +260,7 @@ function App() {
             project name<select id="project_delete_label" onChange={() => setProjectLabel(document.getElementById("project_delete_label").value)}>
               <option></option>
               {projects && projects.map((project) => (
-                <option><ProjectItem item={project} key={project.id}/></option>
+                <option key={project.id}>{project.name}</option>
               ))}
             </select>
 
@@ -269,7 +268,7 @@ function App() {
 
             label name<select id="label_to_delete">
             {labels && labels.map((label) => (
-              <option><ProjectItem item={label} key={label.id}/></option>
+              <option key={label.id}>{label.name}</option>
             ))}
             </select>
 
@@ -312,7 +311,8 @@ function App() {
 
             project name<select id="project_members">
             {projects && projects.map((project) => (
-              <option><ProjectItem item={project} key={project.id}/></option>
+              // <option><ProjectItem item={project} key={project.id}/></option>
+              <option key={project.id}>{project.name}</option>
             ))}
             </select>
 
@@ -352,7 +352,7 @@ function App() {
 
               project name<select id="project_create_member">
               {projects && projects.map((project) => (
-                <option><ProjectItem item={project} key={project.id}/></option>
+                <option key={project.id}>{project.name}</option>
               ))}
               </select>
 
@@ -392,7 +392,7 @@ function App() {
             project name<select id="project_delete_member" onChange={() => setProject(document.getElementById("project_delete_member").value)}>
               <option></option>
               {projects && projects.map((project) => (
-                <option><ProjectItem item={project} key={project.id}/></option>
+                <option key={project.id}>{project.name}</option>
               ))}
             </select>
 
@@ -400,7 +400,7 @@ function App() {
 
             member<select id="member_to_delete">
             {projectMembers && projectMembers.map((projectMember) => (
-              <option><ProjectItem item={projectMember} key={projectMember.id}/></option>
+              <option key={projectMember.id}>{projectMember.name}</option>
             ))}
             </select>
 
