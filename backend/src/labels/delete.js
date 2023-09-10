@@ -6,7 +6,7 @@ const getProjects = require("../projects/get");
 const getLabelsByProject = require("./get");
 
 const api = new Gitlab({ 
-  token : 'glpat-zvPjAxXA2jjToS4MMDzx', 
+  token : 'put your token generated through gitlab', 
 });
 
 const deleteLabel = async(nameProject, nameLabel) => {

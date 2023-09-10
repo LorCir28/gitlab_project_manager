@@ -5,7 +5,7 @@ const { Gitlab } = require('@gitbeaker/node');
 const cors = require("cors");
 
 const api = new Gitlab({ 
-  token : 'glpat-zvPjAxXA2jjToS4MMDzx', 
+  token : 'put your token generated through gitlab', 
 });
 
 const app = express();
